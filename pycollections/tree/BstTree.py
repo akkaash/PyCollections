@@ -77,3 +77,23 @@ class BstTree(BaseTree.BaseTree):
                 current = current.get_right()
         if current is None:
             raise ValueError('Element not found')
+
+    def search(self, element=None, get_node=False):
+        if element is None:
+            raise ValueError('Element is None')
+        current = self.__root
+        while current is not None:
+            if current.get_element() == element:
+                if get_node is True:
+                    return current
+                else:
+                    return True
+            elif element < current.get_element():
+                current = current.get_left()
+            else:
+                current = current.get_right()
+        if get_node is True:
+            return None
+        else:
+            return False
+
