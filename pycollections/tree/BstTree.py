@@ -5,11 +5,8 @@ from pycollections.tree import BaseTree
 
 
 class BstTree(BaseTree.BaseTree):
-    def __init__(self, root=None):
-        if root is not None and not isinstance(root, BstNode.BstNode):
-            raise TypeError('Specified root should be of type BstNode')
-
-        self.__root = root
+    def __init__(self, root_element=None):
+        self.__root = BstNode.BstNode(root_element)
         self.__size = 1
 
     def __len__(self):
@@ -33,26 +30,50 @@ class BstTree(BaseTree.BaseTree):
         else:
             raise ValueError('Tree is empty')
 
-    def insert(self, node=None):
-        if node is None:
-            raise ValueError('Specified node is null')
-        if not isinstance(node, BstNode.BstNode):
-            raise TypeError('Specified node should be of type BstNode')
+    def insert(self, element=None):
+        new_node = BstNode.BstNode(element)
+        if element is None:
+            raise ValueError('Specified element is null')
         if self.is_empty():
-            self.__root = node
+            self.__root = new_node
         else:
             current = self.__root
             parent = None
             while current is not None:
                 parent = current
-                if current.get_element() == node.get_element():
+                if current.get_element() == element:
                     raise ValueError('Element exists in Tree')
-                elif node.get_element() < current.get_element():
+                elif element < current.get_element():
                     current = current.get_left()
                 else:
                     current = current.get_right()
 
-            if node.get_element() < parent.get_element():
-                parent.set_left(node)
+            if element < parent.get_element():
+                parent.set_left(new_node)
+                return new_node
             else:
-                parent.set_right(node)
+                parent.set_right(new_node)
+                return new_node
+
+    def remove(self, element=None):
+        if self.is_empty():
+            raise ValueError('Tree is empty')
+        if element is None:
+            raise ValueError('Specified Node is null')
+        current = self.__root
+        parent = self.__root
+        is_left_child = True
+        while current is not None:
+            parent = current
+            if current.get_element() == element:
+                if current == parent.get_left():
+                    is_left_child = True
+                else:
+                    is_left_child = False
+                break
+            elif element < current.get_element():
+                current = current.get_left()
+            elif element > current.get_element():
+                current = current.get_right()
+        if current is None:
+            raise ValueError('Element not found')
